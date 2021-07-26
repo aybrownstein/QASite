@@ -1,0 +1,28 @@
+﻿@model HomeViewModel
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        @foreach (var question in Model.Questions)
+            {
+            <div class="card card-body bg-light">
+                <h4>
+                    <a href="/Home/vieQuestion?id=@question.Id">
+                        @question.Title
+                    </a>
+                </h4>
+         <div>
+             <span>Tags</span>
+             @foreach (var tag in question.QuesionsTags)
+                {
+                    <span class="badge badge-primary">@tag.Tag.Name</span>
+                }
+         </div>
+                <div style="margin-top: 10px;">
+                    @(question.Text.Length < 200 ? question.Text : (question.Text.Substring(0, 200) + "..."))
+                </div>
+                <span>Likes:@question.Likes.Count</span><br />
+                <span>@question.Answers.Count answer(s)</span>
+            </div>
+            }
+    </div>
+</div>

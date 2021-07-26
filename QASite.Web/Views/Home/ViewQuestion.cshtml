@@ -1,0 +1,74 @@
+﻿@model ViewQuestionModel
+
+<div class="row">
+    <div class="col-md-8 offset-md-2 jumbotron">
+        <h2>@Model.Question.Title</h2><hr />
+        @foreach (var paragraph in Model.Question.Text.Split("\r\n"))
+            {
+                <p>@paragraph</p>
+            }
+        <hr />
+        <span>Asked By @Model.Question.User.UserName</span>
+        on <span>@Model.Question.DatePosted.ToLongDateString()</span>
+        <br />
+        <span>Tags:</span>
+        @foreach (var qt in Model.Question.QuesionsTags)
+            {
+                <span class="badge badge-primary">@qt.Tag.Name</span>
+            }<br />
+        <span>Likes:</span> <span data-question-id="@Model.Question.Id" id="likes-count">@Model.Question.Likes.Count></span><br />
+        @if (Model.CurrentUser != null)
+            {
+                if(Model.Question.Likes.Any(l => l.UserId == Model.CurrentUser.Id))
+                {
+                    <span style="font-size: 40px; cursor: pointer;" class="oi oi-heart text-danger"></span> 
+                }
+                else
+                {
+                    <span style="font-size: 40px; cursor: pointer;" class="oi oi-heart" id="like-question" data-question-id="@Model.Question.Id"></span>
+                }
+            }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h3>Answers:</h3>
+    </div>
+</div>
+@if (Model.Question.Answers.Count == 0)
+{
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 card-body bg-light">
+                        <h3>No Answers Yet: Be the first!</h3>
+                    </div>
+                </div>
+}
+else
+{
+    foreach (var answer in Model.Question.Answers)
+    {
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 card-body bg-light">
+                            <div>@answer.Text</div><br />
+                            <span>Answred by:@answer.User.UserName</span>
+                           
+                        </div>
+                        </div>
+    }
+}
+@if(Model.CurrentUser != null)
+            {
+<div class="row">
+    <div class="col-md-8 offset-md-2 card-body bg-light mt-4">
+        <h2>Submit An Answer</h2>
+        <form method="post" action="/Home/AddAnswer">
+            <input type="hidden" name="questionId" value="@Model.Question.Id" />
+            <textarea class="form-control" placeholder="type your question here..." rows="10" name="text"></textarea>
+            <button class="btn btn-primary">Submit</button>
+        </form>
+        </div>
+    </div>
+    }
+@section scripts{ 
+<script src="~/js/viewQuestion.js"></script>
+}
